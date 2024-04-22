@@ -24,7 +24,7 @@ type GiteaRepository struct {
 	owner           string
 	stripVTagPrefix bool
 	compareCommits  bool
-	baseUrl         string
+	baseURL         string
 }
 
 //gocyclo:ignore
@@ -33,7 +33,7 @@ func (repo *GiteaRepository) Init(config map[string]string) error {
 	if giteaHost == "" {
 		giteaHost = os.Getenv("GITEA_HOST")
 	}
-	repo.baseUrl = giteaHost
+	repo.baseURL = giteaHost
 	slug := config["slug"]
 	if slug == "" {
 		slug = os.Getenv("GITHUB_REPOSITORY")

@@ -45,7 +45,7 @@ func TestNewGiteaRepository(t *testing.T) {
 		"strip_v_tag_prefix": "true",
 	})
 	require.NoError(err)
-	require.Equal("github.enterprise", repo.baseUrl)
+	require.Equal("github.enterprise", repo.baseURL)
 }
 
 var (
@@ -206,7 +206,7 @@ func getNewGithubTestRepo(t *testing.T) (*GiteaRepository, *httptest.Server) {
 	ts := httptest.NewServer(http.HandlerFunc(githubHandler))
 
 	u, _ := url.Parse(ts.URL + "/")
-	repo.baseUrl = u.String()
+	repo.baseURL = u.String()
 
 	return repo, ts
 }
@@ -307,7 +307,7 @@ func TestGitHubStripVTagRelease(t *testing.T) {
 	})
 	require.NoError(t, err)
 	u, _ := url.Parse(ts.URL + "/")
-	repo.baseUrl = u.String()
+	repo.baseURL = u.String()
 
 	err = repo.CreateRelease(&provider.CreateReleaseConfig{NewVersion: "2.0.0", SHA: testSHA})
 	require.NoError(t, err)
