@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -105,13 +106,94 @@ func (repo *GiteaRepository) GetInfo() (*provider.RepositoryInfo, error) {
 	}, nil
 }
 
+func (repo *GiteaRepository) getCommitsFromGitea(fromSha, _ string, opts *gitea.ListOptions) ([]*gitea.Commit, *gitea.Response, error) {
+	return repo.client.ListRepoCommits(repo.owner, repo.repo, gitea.ListCommitOptions{
+		SHA:         fromSha,
+		ListOptions: *opts})
+}
+
 func (repo *GiteaRepository) GetCommits(fromSha, toSha string) ([]*semrel.RawCommit, error) {
-	return repo.localRepo.GetCommits(fromSha, toSha)
+	allCommits := make([]*semrel.RawCommit, 0)
+	opts := &gitea.ListOptions{PageSize: 100}
+	done := false
+	for {
+		commits, resp, err := repo.getCommitsFromGitea(fromSha, toSha, opts)
+		if err != nil {
+			return nil, err
+		}
+		for _, commit := range commits {
+			sha := commit.SHA
+
+			allCommits = append(allCommits, &semrel.RawCommit{
+				SHA:        sha,
+				RawMessage: commit.RepoCommit.Message,
+				Annotations: map[string]string{
+					"author_login":    commit.Author.UserName,
+					"author_name":     commit.Author.FullName,
+					"author_email":    commit.Author.Email,
+					"author_date":     commit.RepoCommit.Author.Date,
+					"committer_login": commit.Committer.UserName,
+					"committer_name":  commit.Committer.FullName,
+					"committer_email": commit.Committer.Email,
+					"committer_date":  commit.RepoCommit.Committer.Date,
+				},
+			})
+		}
+		if done || resp.NextPage == 0 {
+			break
+		}
+		opts.Page = resp.NextPage
+	}
+	return allCommits, nil
 }
 
 //gocyclo:ignore
 func (repo *GiteaRepository) GetReleases(rawRe string) ([]*semrel.Release, error) {
-	return repo.localRepo.GetReleases(rawRe)
+	re := regexp.MustCompile(rawRe)
+	allReleases := make([]*semrel.Release, 0)
+	opts := gitea.ListRepoTagsOptions{ListOptions: gitea.ListOptions{PageSize: 100}}
+	for {
+		refs, resp, err := repo.client.GetRepoRefs(repo.owner, repo.repo, "")
+		if resp != nil && resp.StatusCode == 404 {
+			return allReleases, nil
+		}
+		if err != nil {
+			return nil, err
+		}
+		for _, r := range refs {
+			tag := strings.TrimPrefix(r.Ref, "refs/tags/")
+			if rawRe != "" && !re.MatchString(tag) {
+				continue
+			}
+			objType := r.Object.Type
+			if objType != "commit" && objType != "tag" {
+				continue
+			}
+			foundSha := r.Object.SHA
+			// resolve annotated tag
+			if objType == "tag" {
+				resTag, _, err := repo.client.GetRepoRef(repo.owner, repo.repo, foundSha)
+				if err != nil {
+					continue
+				}
+				if resTag.Object.Type != "commit" {
+					continue
+				}
+				foundSha = resTag.Object.SHA
+			}
+			version, err := semver.NewVersion(tag)
+			if err != nil {
+				continue
+			}
+			allReleases = append(allReleases, &semrel.Release{SHA: foundSha, Version: version.String()})
+		}
+		if resp.NextPage == 0 {
+			break
+		}
+		opts.Page = resp.NextPage
+	}
+
+	return allReleases, nil
 }
 
 func (repo *GiteaRepository) CreateRelease(release *provider.CreateReleaseConfig) error {
@@ -125,7 +207,7 @@ func (repo *GiteaRepository) CreateRelease(release *provider.CreateReleaseConfig
 
 	opt := gitea.CreateReleaseOption{
 		TagName:      tag,
-		Target:       "main",
+		Target:       release.Branch,
 		Title:        tag,
 		Note:         release.Changelog,
 		IsPrerelease: isPrerelease,
