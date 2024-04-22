@@ -125,7 +125,7 @@ func (repo *GiteaRepository) CreateRelease(release *provider.CreateReleaseConfig
 
 	opt := gitea.CreateReleaseOption{
 		TagName:      tag,
-		Target:       release.Branch,
+		Target:       "main",
 		Title:        tag,
 		Note:         release.Changelog,
 		IsPrerelease: isPrerelease,
