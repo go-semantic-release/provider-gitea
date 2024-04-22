@@ -27,6 +27,7 @@ type GiteaRepository struct {
 	baseUrl         string
 }
 
+//gocyclo:ignore
 func (repo *GiteaRepository) Init(config map[string]string) error {
 	giteaHost := config["gitea_host"]
 	if giteaHost == "" {
@@ -93,7 +94,6 @@ func (repo *GiteaRepository) Init(config map[string]string) error {
 
 func (repo *GiteaRepository) GetInfo() (*provider.RepositoryInfo, error) {
 	r, _, err := repo.client.GetRepo(repo.owner, repo.repo)
-
 	if err != nil {
 		return nil, err
 	}
@@ -123,11 +123,13 @@ func (repo *GiteaRepository) CreateRelease(release *provider.CreateReleaseConfig
 	tag := prefix + release.NewVersion
 	isPrerelease := release.Prerelease || semver.MustParse(release.NewVersion).Prerelease() != ""
 
-	opt := gitea.CreateReleaseOption{TagName: tag,
+	opt := gitea.CreateReleaseOption{
+		TagName:      tag,
 		Target:       release.Branch,
 		Title:        tag,
 		Note:         release.Changelog,
-		IsPrerelease: isPrerelease}
+		IsPrerelease: isPrerelease,
+	}
 
 	_, _, err := repo.client.CreateRelease(repo.owner, repo.repo, opt)
 	return err
