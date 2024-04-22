@@ -1,7 +1,7 @@
 package main
 
 import (
-	githubProvider "github.com/go-semantic-release/provider-github/pkg/provider"
+	giteaProvider "github.com/cybercinch/go-semantic-release-provider-gitea/pkg/provider"
 	"github.com/go-semantic-release/semantic-release/v2/pkg/plugin"
 	"github.com/go-semantic-release/semantic-release/v2/pkg/provider"
 )
@@ -9,7 +9,7 @@ import (
 func main() {
 	plugin.Serve(&plugin.ServeOpts{
 		Provider: func() provider.Provider {
-			return &githubProvider.GitHubRepository{}
+			return &giteaProvider.GiteaRepository{}
 		},
 	})
 }
