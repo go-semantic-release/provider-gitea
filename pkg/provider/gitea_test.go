@@ -21,31 +21,31 @@ var validTags = map[string]bool{
 	"2.0.0":  true,
 }
 
-func TestNewGithubRepository(t *testing.T) {
+func TestNewGiteaRepository(t *testing.T) {
 	require := require.New(t)
 
-	var repo *GitHubRepository
-	repo = &GitHubRepository{}
+	var repo *GiteaRepository
+	repo = &GiteaRepository{}
 	err := repo.Init(map[string]string{})
-	require.EqualError(err, "github token missing")
+	require.EqualError(err, "gitea token missing")
 
-	repo = &GitHubRepository{}
+	repo = &GiteaRepository{}
 	err = repo.Init(map[string]string{
-		"github_enterprise_host": "",
-		"slug":                   "owner/test-repo",
-		"token":                  "token",
+		"gitea_host": "gitea.example.corp",
+		"slug":       "owner/test-repo",
+		"token":      "token",
 	})
 	require.NoError(err)
 
-	repo = &GitHubRepository{}
+	repo = &GiteaRepository{}
 	err = repo.Init(map[string]string{
-		"github_enterprise_host": "github.enterprise",
-		"slug":                   "owner/test-repo",
-		"token":                  "token",
-		"strip_v_tag_prefix":     "true",
+		"gitea_host":         "github.enterprise",
+		"slug":               "owner/test-repo",
+		"token":              "token",
+		"strip_v_tag_prefix": "true",
 	})
 	require.NoError(err)
-	require.Equal("github.enterprise", repo.client.BaseURL.Host)
+	require.Equal("github.enterprise", repo.baseUrl)
 }
 
 var (
@@ -196,15 +196,18 @@ func githubHandler(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "invalid route", http.StatusNotImplemented)
 }
 
-func getNewGithubTestRepo(t *testing.T) (*GitHubRepository, *httptest.Server) {
-	repo := &GitHubRepository{}
+func getNewGithubTestRepo(t *testing.T) (*GiteaRepository, *httptest.Server) {
+	repo := &GiteaRepository{}
 	err := repo.Init(map[string]string{
 		"slug":  "owner/test-repo",
 		"token": "token",
 	})
 	require.NoError(t, err)
 	ts := httptest.NewServer(http.HandlerFunc(githubHandler))
-	repo.client.BaseURL, _ = url.Parse(ts.URL + "/")
+
+	u, _ := url.Parse(ts.URL + "/")
+	repo.baseUrl = u.String()
+
 	return repo, ts
 }
 
@@ -296,14 +299,15 @@ func TestGitHubStripVTagRelease(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(githubHandler))
 	defer ts.Close()
 
-	repo := &GitHubRepository{}
+	repo := &GiteaRepository{}
 	err := repo.Init(map[string]string{
 		"slug":               "owner/test-repo",
 		"token":              "token",
 		"strip_v_tag_prefix": "true",
 	})
 	require.NoError(t, err)
-	repo.client.BaseURL, _ = url.Parse(ts.URL + "/")
+	u, _ := url.Parse(ts.URL + "/")
+	repo.baseUrl = u.String()
 
 	err = repo.CreateRelease(&provider.CreateReleaseConfig{NewVersion: "2.0.0", SHA: testSHA})
 	require.NoError(t, err)
