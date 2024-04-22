@@ -109,7 +109,8 @@ func (repo *GiteaRepository) GetInfo() (*provider.RepositoryInfo, error) {
 func (repo *GiteaRepository) getCommitsFromGitea(fromSha, _ string, opts *gitea.ListOptions) ([]*gitea.Commit, *gitea.Response, error) {
 	return repo.client.ListRepoCommits(repo.owner, repo.repo, gitea.ListCommitOptions{
 		SHA:         fromSha,
-		ListOptions: *opts})
+		ListOptions: *opts,
+	})
 }
 
 func (repo *GiteaRepository) GetCommits(fromSha, toSha string) ([]*semrel.RawCommit, error) {
