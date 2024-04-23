@@ -55,7 +55,7 @@ func (repo *GiteaRepository) Init(config map[string]string) error {
 	}
 	split := strings.Split(slug, "/")
 	if len(split) != 2 {
-		return errors.New("Slug parts too many. Got: %v", split)
+		return fmt.Errorf("Slug parts too many. Got: %v", split)
 	} else {
 		repo.owner = split[0]
 		repo.repo = split[1]
