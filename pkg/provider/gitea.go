@@ -103,19 +103,19 @@ func (repo *GiteaRepository) GetInfo() (*provider.RepositoryInfo, error) {
 
 //lint:ignore U1000 Ignore unused function temporarily for debugging
 //revive:disable-next-line
-func (repo *GiteaRepository) getCommitsFromGitea(fromSha, toSha string, opts *gitea.ListOptions) ([]*gitea.Commit, *gitea.Response, error) {
+func (repo *GiteaRepository) getCommitsFromGitea(fromSha string, opts *gitea.ListOptions) ([]*gitea.Commit, *gitea.Response, error) {
 	return repo.client.ListRepoCommits(repo.owner, repo.repo, gitea.ListCommitOptions{
-		SHA:         toSha,
+		SHA:         fromSha,
 		ListOptions: *opts,
 	})
 }
 
-func (repo *GiteaRepository) GetCommits(fromSha, toSha string) ([]*semrel.RawCommit, error) {
+func (repo *GiteaRepository) GetCommits(fromSha, _ string) ([]*semrel.RawCommit, error) {
 	allCommits := make([]*semrel.RawCommit, 0)
 	opts := &gitea.ListOptions{PageSize: 100}
 	done := false
 	for {
-		commits, resp, err := repo.getCommitsFromGitea(fromSha, toSha, opts)
+		commits, resp, err := repo.getCommitsFromGitea(fromSha, opts)
 		if err != nil {
 			return nil, err
 		}
