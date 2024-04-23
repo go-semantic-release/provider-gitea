@@ -101,9 +101,10 @@ func (repo *GiteaRepository) GetInfo() (*provider.RepositoryInfo, error) {
 	}, nil
 }
 
-func (repo *GiteaRepository) getCommitsFromGitea(fromSha, _ string, opts *gitea.ListOptions) ([]*gitea.Commit, *gitea.Response, error) {
+//lint:ignore U1000 Ignore unused function temporarily for debugging
+func (repo *GiteaRepository) getCommitsFromGitea(fromSha string, toSha string, opts *gitea.ListOptions) ([]*gitea.Commit, *gitea.Response, error) {
 	return repo.client.ListRepoCommits(repo.owner, repo.repo, gitea.ListCommitOptions{
-		SHA:         fromSha,
+		SHA:         toSha,
 		ListOptions: *opts,
 	})
 }
