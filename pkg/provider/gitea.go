@@ -54,8 +54,12 @@ func (repo *GiteaRepository) Init(config map[string]string) error {
 		return errors.New("invalid slug")
 	}
 	split := strings.Split(slug, "/")
-	repo.owner = split[0]
-	repo.repo = split[1]
+	if len(split) != 2 {
+		return errors.New("Slug parts too many. Got: %v", split)
+	} else {
+		repo.owner = split[0]
+		repo.repo = split[1]
+	}
 
 	ctx := context.Background()
 	if giteaHost != "" {
