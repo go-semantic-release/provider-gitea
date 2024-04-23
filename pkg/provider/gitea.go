@@ -59,6 +59,9 @@ func (repo *GiteaRepository) Init(config map[string]string) error {
 	repo.owner = split[len(split)-2]
 	repo.repo = split[len(split)-1]
 
+	// Ensure no .git suffix remains
+	repo.repo = strings.TrimSuffix(repo.repo, ".git")
+
 	ctx := context.Background()
 	if giteaHost != "" {
 		client, err := gitea.NewClient(giteaHost,
