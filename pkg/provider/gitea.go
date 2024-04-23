@@ -11,7 +11,6 @@ import (
 
 	"code.gitea.io/sdk/gitea"
 	"github.com/Masterminds/semver/v3"
-	GitProvider "github.com/go-semantic-release/provider-git/pkg/provider"
 	"github.com/go-semantic-release/semantic-release/v2/pkg/provider"
 	"github.com/go-semantic-release/semantic-release/v2/pkg/semrel"
 )
@@ -20,7 +19,6 @@ var PVERSION = "dev"
 
 type GiteaRepository struct {
 	client          *gitea.Client
-	localRepo       *GitProvider.Repository
 	repo            string
 	owner           string
 	stripVTagPrefix bool
@@ -47,14 +45,6 @@ func (repo *GiteaRepository) Init(config map[string]string) error {
 	token := config["token"]
 	if token == "" {
 		token = os.Getenv("GITEA_TOKEN")
-		repo.localRepo = &GitProvider.Repository{}
-		err := repo.localRepo.Init(map[string]string{
-			"remote_name": "origin",
-			"git_path":    os.Getenv("CI_PROJECT_DIR"),
-		})
-		if err != nil {
-			return errors.New("failed to initialize local git repository: " + err.Error())
-		}
 	}
 	if token == "" {
 		return errors.New("gitea token missing")
