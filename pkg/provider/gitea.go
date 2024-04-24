@@ -110,7 +110,7 @@ func (repo *GiteaRepository) getCommitsFromGitea(fromSha string, opts *gitea.Lis
 	})
 }
 
-func (repo *GiteaRepository) GGetCommits(_, toSha string) ([]*semrel.RawCommit, error) {
+func (repo *GiteaRepository) GetCommits(_, toSha string) ([]*semrel.RawCommit, error) {
 	allCommits := make([]*semrel.RawCommit, 0)
 	opts := &gitea.ListOptions{PageSize: 100}
 	done := false
