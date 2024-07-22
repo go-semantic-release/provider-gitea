@@ -125,6 +125,10 @@ func (repo *GiteaRepository) GetCommits(_, toSha string) ([]*semrel.RawCommit, e
 		for _, commit := range commits {
 			sha := commit.SHA
 
+			if commit.Author == nil {
+				return nil, errors.New(fmt.Sprintf("gitea: author is not found. Check email [%s] is assigned to user.",
+					commit.Committer.Email))
+			}
 			allCommits = append(allCommits, &semrel.RawCommit{
 				SHA:        sha,
 				RawMessage: commit.RepoCommit.Message,
