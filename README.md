@@ -1,5 +1,5 @@
 # :octocat: provider-gitea
-[![CI](https://github.com/cybercinch/go-semantic-release-provider-gitea/workflows/CI/badge.svg?branch=master)](https://github.com/cybercinch/go-semantic-release-provider-gitea/actions?query=workflow%3ACI+branch%3Amaster)
+[![CI](https://github.com/cybercinch/go-semantic-release-provider-gitea/workflows/CI/badge.svg?branch=master)](https://github.com/cybercinch/go-semantic-release-provider-gitea/actions?query=workflow%3ACI+branch%3Amain)
 
 The Gitea provider for [go-semantic-release](https://github.com/go-semantic-release/semantic-release).
 
