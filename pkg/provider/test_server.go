@@ -1,11 +1,12 @@
 package provider
 
 import (
-	"code.gitea.io/sdk/gitea"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+
+	"code.gitea.io/sdk/gitea"
 )
 
 var validTags = map[string]bool{

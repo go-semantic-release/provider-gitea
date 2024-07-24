@@ -1,13 +1,15 @@
 package provider
 
 import (
-	"code.gitea.io/sdk/gitea"
 	"fmt"
-	"github.com/stretchr/testify/require"
 	"io"
 	"os"
 	"testing"
 	"time"
+
+	"code.gitea.io/sdk/gitea"
+
+	"github.com/stretchr/testify/require"
 )
 
 func createGiteaCommit(sha, message, date string) *gitea.Commit {
