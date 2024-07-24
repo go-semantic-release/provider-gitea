@@ -1,10 +1,9 @@
-package tests
+package provider
 
 import (
 	"fmt"
 	"testing"
 
-	provider2 "github.com/cybercinch/go-semantic-release-provider-gitea/pkg/provider"
 	"github.com/go-semantic-release/semantic-release/v2/pkg/provider"
 	"github.com/go-semantic-release/semantic-release/v2/pkg/semrel"
 	"github.com/stretchr/testify/require"
@@ -16,12 +15,12 @@ func TestNewGiteaRepository(t *testing.T) {
 
 	assertions := require.New(t)
 
-	var repo *provider2.GiteaRepository
-	repo = &provider2.GiteaRepository{}
+	var repo *GiteaRepository
+	repo = &GiteaRepository{}
 	err := repo.Init(map[string]string{})
 	assertions.EqualError(err, "gitea host is not set")
 
-	repo = &provider2.GiteaRepository{}
+	repo = &GiteaRepository{}
 
 	err = repo.Init(map[string]string{
 		"gitea_host": server.URL,
@@ -132,7 +131,7 @@ func TestGiteaCreateReleaseStripPrefix(t *testing.T) {
 	defer teardown()
 
 	assertions := require.New(t)
-	repo := &provider2.GiteaRepository{}
+	repo := &GiteaRepository{}
 
 	err := repo.Init(map[string]string{
 		"gitea_host":         server.URL,

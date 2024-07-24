@@ -1,11 +1,13 @@
-package tests
+package provider
 
 import (
+	"code.gitea.io/sdk/gitea"
+	"fmt"
+	"github.com/stretchr/testify/require"
 	"io"
 	"os"
+	"testing"
 	"time"
-
-	"code.gitea.io/sdk/gitea"
 )
 
 func createGiteaCommit(sha, message, date string) *gitea.Commit {
@@ -79,4 +81,25 @@ func retrieveData(filepath string) ([]byte, error) {
 
 	byteValue, _ := io.ReadAll(jsonFile)
 	return byteValue, nil
+}
+
+func setup() {
+	server = CreateTestServer()
+}
+
+func createTestGiteaRepo(t *testing.T) *GiteaRepository {
+	assertions := require.New(t)
+	repo := &GiteaRepository{}
+
+	err := repo.Init(map[string]string{
+		"gitea_host": server.URL,
+		"slug":       fmt.Sprintf("%s/%s", giteaUser, giteaRepo),
+		"token":      "token",
+	})
+	assertions.NoError(err)
+	return repo
+}
+
+func teardown() {
+	server.Close()
 }

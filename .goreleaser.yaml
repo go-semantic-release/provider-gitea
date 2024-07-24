@@ -8,7 +8,7 @@ builds:
       - darwin_arm64
       - linux_arm
       - windows_amd64
-    main: ./cmd/provider-gitea
+    main: ./_cmd/provider-gitea
     ldflags:
       - -extldflags '-static'
       - -s -w -X github.com/cybercinch/go-semantic-release-provider-gitea/pkg/provider.PVERSION={{.Version}}
