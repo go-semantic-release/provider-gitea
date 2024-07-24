@@ -2,7 +2,6 @@ package provider
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"os"
 	"regexp"
@@ -22,20 +21,29 @@ type GiteaRepository struct {
 	repo            string
 	owner           string
 	stripVTagPrefix bool
-	compareCommits  bool
 	baseURL         string
 }
 
-//gocyclo:ignore
+// gocyclo:ignore
 func (repo *GiteaRepository) Init(config map[string]string) error {
 	giteaHost := config["gitea_host"]
 	if giteaHost == "" {
 		giteaHost = os.Getenv("GITEA_HOST")
 	}
+	// If host is still not set error
+	if giteaHost == "" {
+		return fmt.Errorf("gitea host is not set")
+	}
+
 	repo.baseURL = giteaHost
 	slug := config["slug"]
+
 	if slug == "" {
 		slug = os.Getenv("GITHUB_REPOSITORY")
+	}
+	// Maybe we are running in Gitea Actions
+	if slug == "" {
+		slug = os.Getenv("GITEA_REPOSITORY")
 	}
 	// Maybe we are running in WoodpeckerCI
 	if slug == "" {
@@ -47,11 +55,11 @@ func (repo *GiteaRepository) Init(config map[string]string) error {
 		token = os.Getenv("GITEA_TOKEN")
 	}
 	if token == "" {
-		return errors.New("gitea token missing")
+		return fmt.Errorf("gitea token missing")
 	}
 
 	if !strings.Contains(slug, "/") {
-		return errors.New("invalid slug")
+		return fmt.Errorf("invalid slug")
 	}
 	split := strings.Split(slug, "/")
 	// This could be due to act locally
@@ -63,21 +71,16 @@ func (repo *GiteaRepository) Init(config map[string]string) error {
 	repo.repo = strings.TrimSuffix(repo.repo, ".git")
 
 	ctx := context.Background()
-	if giteaHost != "" {
-		client, err := gitea.NewClient(giteaHost,
-			gitea.SetToken(token),
-			gitea.SetContext(ctx))
-		if err != nil {
-			return err
-		}
-		repo.client = client
+
+	client, err := gitea.NewClient(giteaHost,
+		gitea.SetToken(token),
+		gitea.SetContext(ctx))
+	if err != nil {
+		return err
 	}
 
-	if config["github_use_compare_commits"] == "true" {
-		repo.compareCommits = true
-	}
+	repo.client = client
 
-	var err error
 	stripVTagPrefix := config["strip_v_tag_prefix"]
 	repo.stripVTagPrefix, err = strconv.ParseBool(stripVTagPrefix)
 
@@ -99,15 +102,6 @@ func (repo *GiteaRepository) GetInfo() (*provider.RepositoryInfo, error) {
 		DefaultBranch: r.DefaultBranch,
 		Private:       r.Private,
 	}, nil
-}
-
-//lint:ignore U1000 Ignore unused function temporarily for debugging
-//revive:disable-next-line
-func (repo *GiteaRepository) getCommitsFromGitea(fromSha string, opts *gitea.ListOptions) ([]*gitea.Commit, *gitea.Response, error) {
-	return repo.client.ListRepoCommits(repo.owner, repo.repo, gitea.ListCommitOptions{
-		SHA:         fromSha,
-		ListOptions: *opts,
-	})
 }
 
 func (repo *GiteaRepository) GetCommits(_, toSha string) ([]*semrel.RawCommit, error) {
