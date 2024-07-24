@@ -2,6 +2,7 @@ package provider
 
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/go-semantic-release/semantic-release/v2/pkg/provider"
@@ -149,4 +150,77 @@ func TestGiteaCreateReleaseStripPrefix(t *testing.T) {
 		SHA:        testSHA,
 	})
 	assertions.NoError(err)
+}
+
+func TestGiteaEnvironmentVars(t *testing.T) {
+	setup()
+	defer teardown()
+
+	testCases := []struct {
+		name        string
+		envVarName  string
+		envVarValue string
+	}{
+		{"Github Environment Var Slug",
+			"GITHUB_REPOSITORY",
+			fmt.Sprintf("%s/%s",
+				giteaUser,
+				giteaRepo)},
+		{"Gitea Environment Var Slug",
+			"GITEA_REPOSITORY",
+			fmt.Sprintf("%s/%s",
+				giteaUser,
+				giteaRepo)},
+		{"WoodpeckerCI Environment Var Slug",
+			"CI_REPO_NAME",
+			fmt.Sprintf("%s/%s",
+				giteaUser,
+				giteaRepo)},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			_ = os.Setenv(tc.envVarName, tc.envVarValue)
+
+			repo := &GiteaRepository{}
+			err := repo.Init(map[string]string{
+				"gitea_host": server.URL,
+				"token":      "token",
+			})
+
+			require.NoError(t, err)
+			_ = os.Unsetenv(tc.envVarName)
+		})
+	}
+}
+
+func TestGiteaTokenNotSet(t *testing.T) {
+	setup()
+	defer teardown()
+
+	assertions := require.New(t)
+
+	repo := &GiteaRepository{}
+	err := repo.Init(map[string]string{
+		"gitea_host": server.URL,
+	})
+
+	assertions.Errorf(err, "gitea token missing")
+}
+
+func TestGiteaNonBooleanStripPrefix(t *testing.T) {
+	setup()
+	defer teardown()
+
+	assertions := require.New(t)
+
+	repo := &GiteaRepository{}
+	err := repo.Init(map[string]string{
+		"gitea_host":         server.URL,
+		"slug":               fmt.Sprintf("%s/%s", giteaUser, giteaRepo),
+		"strip_v_tag_prefix": "something",
+		"token":              "token",
+	})
+
+	assertions.Errorf(err, "failed to set property strip_v_tag_prefix: strconv.ParseBool: parsing \"something\": invalid syntax")
 }
