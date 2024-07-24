@@ -161,21 +161,27 @@ func TestGiteaEnvironmentVars(t *testing.T) {
 		envVarName  string
 		envVarValue string
 	}{
-		{"Github Environment Var Slug",
+		{
+			"Github Environment Var Slug",
 			"GITHUB_REPOSITORY",
 			fmt.Sprintf("%s/%s",
 				giteaUser,
-				giteaRepo)},
-		{"Gitea Environment Var Slug",
+				giteaRepo),
+		},
+		{
+			"Gitea Environment Var Slug",
 			"GITEA_REPOSITORY",
 			fmt.Sprintf("%s/%s",
 				giteaUser,
-				giteaRepo)},
-		{"WoodpeckerCI Environment Var Slug",
+				giteaRepo),
+		},
+		{
+			"WoodpeckerCI Environment Var Slug",
 			"CI_REPO_NAME",
 			fmt.Sprintf("%s/%s",
 				giteaUser,
-				giteaRepo)},
+				giteaRepo),
+		},
 	}
 
 	for _, tc := range testCases {
