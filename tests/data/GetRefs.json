@@ -1,0 +1,56 @@
+[
+  {
+    "ref": "refs/tags/v2.0.0",
+    "url": "https://1.1.1.1/api/v1/repos/owner/test-repo/git/refs/tags/v2.0.0",
+    "object": {
+      "type": "commit",
+      "sha": "deadbeef",
+      "url": "https://1.1.1.1/api/v1/repos/owner/test-repo/git/commits/deadbeef"
+    }
+  },
+  {
+    "ref": "refs/tags/4.0.0-beta",
+    "url": "https://1.1.1.1/api/v1/repos/owner/test-repo/git/refs/tags/4.0.0-beta",
+    "object": {
+      "type": "commit",
+      "sha": "deadbeef",
+      "url": "https://1.1.1.1/api/v1/repos/owner/test-repo/git/commits/deadbeef"
+    }
+  },
+  {
+    "ref": "refs/tags/3.0.0-beta.2",
+    "url": "https://1.1.1.1/api/v1/repos/owner/test-repo/git/refs/tags/3.0.0-beta.2",
+    "object": {
+      "type": "commit",
+      "sha": "deadbeef",
+      "url": "https://1.1.1.1/api/v1/repos/owner/test-repo/git/commits/deadbeef"
+    }
+  },
+  {
+    "ref": "refs/tags/2.1.0-beta",
+    "url": "https://1.1.1.1/api/v1/repos/owner/test-repo/git/refs/tags/2.1.0-beta",
+    "object": {
+      "type": "commit",
+      "sha": "deadbeef",
+      "url": "https://1.1.1.1/api/v1/repos/owner/test-repo/git/commits/deadbeef"
+    }
+  },
+  {
+    "ref": "refs/tags/2.0.0",
+    "url": "https://1.1.1.1/api/v1/repos/owner/test-repo/git/refs/tags/2.0.0",
+    "object": {
+      "type": "commit",
+      "sha": "deadbeef",
+      "url": "https://1.1.1.1/api/v1/repos/owner/test-repo/git/commits/deadbeef"
+    }
+  },
+  {
+    "ref": "refs/tags/2020.4.19",
+    "url": "https://1.1.1.1/api/v1/repos/owner/test-repo/git/refs/tags/2020.4.19",
+    "object": {
+      "type": "commit",
+      "sha": "deadbeef",
+      "url": "https://1.1.1.1/api/v1/repos/owner/test-repo/git/commits/deadbeef"
+    }
+  }
+]
