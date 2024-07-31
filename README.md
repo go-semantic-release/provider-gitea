@@ -1,9 +1,10 @@
 # :octocat: provider-gitea
-[![CI](https://github.com/guisea/go-semantic-release-provider-gitea/actions/workflows/ci.yml/badge.svg)](https://github.com/guisea/go-semantic-release-provider-gitea/actions/workflows/ci.yml)[![codecov](https://codecov.io/github/guisea/go-semantic-release-provider-gitea/graph/badge.svg?token=K8DX5ZQ3Y2)](https://codecov.io/github/guisea/go-semantic-release-provider-gitea)
+[![CI](https://github.com/guisea/go-semantic-release-provider-gitea/actions/workflows/ci.yml/badge.svg)](https://github.com/guisea/go-semantic-release-provider-gitea/actions/workflows/ci.yml) ![Endpoint Badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fbadges.cybercinch.nz%2Fgo-semantic-release%2Fprovider-gitea%2Fcoverage)
+
 
 The Gitea provider for [go-semantic-release](https://github.com/go-semantic-release/semantic-release).
 
-### Provider Option
+### Provider Options
 
 The provider options can be configured via the `--provider-opt` CLI flag.
 
