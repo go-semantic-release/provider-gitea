@@ -1,1 +1,8 @@
 .idea/
+
+#No secrets
+.secrets
+.env
+
+# No Coverage output
+**/coverage.out
