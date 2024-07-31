@@ -1,3 +1,4 @@
+//coverage:ignore
 package provider
 
 import (
@@ -35,12 +36,6 @@ func CreateTestServer() *httptest.Server {
 
 //gocyclo:ignore
 func GiteaHandler(w http.ResponseWriter, r *http.Request) {
-	// Rate Limit headers
-	if r.Header.Get("Authorization") == "" {
-		http.Error(w, "unauthorized", http.StatusUnauthorized)
-		return
-	}
-
 	if r.Method == http.MethodGet && r.URL.Path == "/api/v1/version" {
 		// Client performs a request to check version
 		// Get json string from file
@@ -83,6 +78,25 @@ func GiteaHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		fmt.Fprint(w, "{}")
+		return
+	}
+
+	http.Error(w, "invalid route", http.StatusNotImplemented)
+}
+
+func GiteaHandlerFailed(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodGet && r.URL.Path == "/api/v1/version" {
+		// Client performs a request to check version
+		// Get json string from file
+		data, _ := retrieveData("data/Version.json")
+		_, _ = fmt.Fprint(w, string(data))
+		return
+	}
+
+	if r.Method == http.MethodGet && r.URL.Path == fmt.Sprintf("/api/v1/repos/%s/%s", giteaUser, giteaRepo) {
+		// Get json string from file
+		data, _ := retrieveData("data/GetRepoInfo.json")
+		_, _ = fmt.Fprint(w, string(data))
 		return
 	}
 

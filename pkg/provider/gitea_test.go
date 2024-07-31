@@ -152,6 +152,30 @@ func TestGiteaCreateReleaseStripPrefix(t *testing.T) {
 	assertions.NoError(err)
 }
 
+func TestGiteaInvalidTag(t *testing.T) {
+	setup()
+	defer teardown()
+
+	assertions := require.New(t)
+	repo := &GiteaRepository{}
+
+	err := repo.Init(map[string]string{
+		"gitea_host": server.URL,
+		"slug":       fmt.Sprintf("%s/%s", giteaUser, giteaRepo),
+		"token":      "token",
+	})
+
+	assertions.NoError(err)
+
+	err = repo.CreateRelease(&provider.CreateReleaseConfig{
+		NewVersion: "1.0.1",
+		Prerelease: false,
+		Branch:     "",
+		SHA:        testSHA,
+	})
+	assertions.Errorf(err, "invalid tag name")
+}
+
 func TestGiteaEnvironmentVars(t *testing.T) {
 	setup()
 	defer teardown()
