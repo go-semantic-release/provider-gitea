@@ -35,9 +35,9 @@ jobs:
           echo "COVERAGE=${COVERAGE}" >> $GITHUB_ENV
 
       - name: Check coverage tolerance
-        if: ${{ env.COVERAGE < 84 }}
+        if: ${{ env.COVERAGE < env.COVER_THRESHOLD }}
         run: |
-          echo "Coverage test below tolerance of 84%"
+          echo "Coverage test of ${{ env.COVERAGE }} below tolerance of ${{ env.COVER_THRESHOLD }}"
           exit 1
 
       - name: Update coverage badge
