@@ -31,8 +31,9 @@ jobs:
         run: |
           set -euo pipefail
           go test -json -race -covermode=atomic -coverprofile=coverage.out ./... 2>&1 | tee /tmp/gotest.log | gotestfmt
-          echo "COVERAGE=$(cat /tmp/gotest.log | sed -nr "s/.*coverage:.([0-9.]+).*/\1/p" | uniq)" >> $GITHUB_ENV
-          echo "Coverage is: ${{ env.COVERAGE }}%"
+          COVERAGE=$(cat /tmp/gotest.log | sed -nr "s/.*coverage:.([0-9.]+).*/\1/p" | uniq)
+          echo "COVERAGE=${COVERAGE}" >> $GITHUB_ENV
+          echo "Coverage is: ${COVERAGE}%"
 
       - name: Update coverage badge
         uses: cybercinch/dynamic-badges-action@master
