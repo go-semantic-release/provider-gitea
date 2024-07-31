@@ -27,13 +27,19 @@ jobs:
         run: go install github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt@latest
 
       # Run tests with nice formatting. Save the original log in /tmp/gotest.log
-      - name: Run tests
+      - name: Run tests and Check Coverage
         run: |
           set -euo pipefail
           go test -json -race -covermode=atomic -coverprofile=coverage.out ./... 2>&1 | tee /tmp/gotest.log | gotestfmt
           COVERAGE=$(cat /tmp/gotest.log | sed -nr "s/.*coverage:.([0-9.]+).*/\1/p" | uniq)
           echo "COVERAGE=${COVERAGE}" >> $GITHUB_ENV
-          echo "Coverage is: ${COVERAGE}%"
+
+      - name: Check coverage tolerance
+        if: ${{ env.COVERAGE < 80 }}
+        uses: actions/github-script@v3
+        with:
+          script: |
+            core.setFailed('Coverage test below tolerance')
 
       - name: Update coverage badge
         uses: cybercinch/dynamic-badges-action@master
