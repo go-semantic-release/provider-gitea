@@ -219,7 +219,10 @@ func (repo *GiteaRepository) CreateRelease(release *provider.CreateReleaseConfig
 	}
 
 	_, _, err := repo.client.CreateRelease(repo.owner, repo.repo, opt)
-	return fmt.Errorf("error returned %w, tag value [%s]", err, tag)
+	if err != nil {
+		return fmt.Errorf("error returned %w, tag value [%s]", err, tag)
+	}
+	return nil
 }
 
 func (repo *GiteaRepository) Name() string {
