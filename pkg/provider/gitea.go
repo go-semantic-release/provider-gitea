@@ -210,6 +210,7 @@ func (repo *GiteaRepository) CreateRelease(release *provider.CreateReleaseConfig
 	tag := prefix + release.NewVersion
 	isPrerelease := release.Prerelease || semver.MustParse(release.NewVersion).Prerelease() != ""
 
+	fmt.Println("Tag is " + tag)
 	opt := gitea.CreateReleaseOption{
 		TagName:      tag,
 		Target:       release.Branch,
