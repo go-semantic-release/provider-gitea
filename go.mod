@@ -10,8 +10,17 @@ require (
 
 require (
 	github.com/davidmz/go-pageant v1.0.2 // indirect
+	github.com/fatih/color v1.16.0 // indirect
 	github.com/go-fed/httpsig v1.1.0 // indirect
+	github.com/golang/protobuf v1.5.4 // indirect
+	github.com/hashicorp/go-hclog v1.6.2 // indirect
+	github.com/hashicorp/go-plugin v1.6.0 // indirect
 	github.com/hashicorp/go-version v1.7.0 // indirect
+	github.com/hashicorp/yamux v0.1.1 // indirect
+	github.com/mattn/go-colorable v0.1.13 // indirect
+	github.com/mattn/go-isatty v0.0.20 // indirect
+	github.com/mitchellh/go-testing-interface v1.14.1 // indirect
+	github.com/oklog/run v1.1.0 // indirect
 	github.com/rogpeppe/go-internal v1.11.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 )
