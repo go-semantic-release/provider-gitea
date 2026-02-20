@@ -6,3 +6,6 @@
 
 # No Coverage output
 **/coverage.out
+
+# Build artifacts
+provider-gitea
