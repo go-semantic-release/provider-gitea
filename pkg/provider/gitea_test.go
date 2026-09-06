@@ -79,6 +79,46 @@ func TestGiteaGetCommits(t *testing.T) {
 	}
 }
 
+func TestGiteaGetCommitsUnknownUser(t *testing.T) {
+	setup()
+	defer teardown()
+
+	assertions := require.New(t)
+	repo := &GiteaRepository{}
+
+	err := repo.Init(map[string]string{
+		"gitea_host": server.URL,
+		"slug":       fmt.Sprintf("%s/%s", giteaUser, giteaRepoNoUser),
+		"token":      "token",
+	})
+	assertions.NoError(err)
+
+	commits, err := repo.GetCommits("", "sa213445t6")
+
+	assertions.NoError(err)
+	assertions.Len(commits, 2)
+
+	k := commits[0]
+	assertions.Equal("1111111111111111111111111111111111111111", k.SHA)
+	assertions.Equal("alice", k.Annotations["author_login"])
+	assertions.Equal("Alice", k.Annotations["author_name"])
+	assertions.Equal("alice@example.com", k.Annotations["author_email"])
+	assertions.Equal("alice", k.Annotations["committer_login"])
+	assertions.Equal("Alice", k.Annotations["committer_name"])
+
+	u := commits[1]
+	assertions.Equal("2222222222222222222222222222222222222222", u.SHA)
+	assertions.Equal("fix: use example command\n", u.RawMessage)
+	assertions.Equal("", u.Annotations["author_login"])
+	assertions.Equal("Unknown Author", u.Annotations["author_name"])
+	assertions.Equal("unknown@example.com", u.Annotations["author_email"])
+	assertions.Equal("2026-04-21T16:00:11-04:00", u.Annotations["author_date"])
+	assertions.Equal("bob", u.Annotations["committer_login"])
+	assertions.Equal("Bob", u.Annotations["committer_name"])
+	assertions.Equal("bob@example.com", u.Annotations["committer_email"])
+	assertions.Equal("2026-04-21T22:57:30+02:00", u.Annotations["committer_date"])
+}
+
 func TestGiteaGetReleases(t *testing.T) {
 	setup()
 	defer teardown()

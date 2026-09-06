@@ -19,6 +19,7 @@ var (
 	server             *httptest.Server
 	giteaUser          = "owner"
 	giteaRepo          = "test-repo"
+	giteaRepoNoUser    = "unknown-user-repo"
 	giteaDefaultBranch = "master"
 	giteaCommits       = []*gitea.Commit{
 		createGiteaCommit(testSHA, "fix:  Removed lint as not go project\n", "2024-04-23T13:20:33+12:00"),
@@ -54,6 +55,13 @@ func GiteaHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet && r.URL.Path == fmt.Sprintf("/api/v1/repos/%s/%s/commits", giteaUser, giteaRepo) {
 		// Get json string from file
 		data, _ := retrieveData("data/GetCommits.json")
+		_, _ = fmt.Fprint(w, string(data))
+		return
+	}
+
+	if r.Method == http.MethodGet && r.URL.Path == fmt.Sprintf("/api/v1/repos/%s/%s/commits", giteaUser, giteaRepoNoUser) {
+		// Get json string from file
+		data, _ := retrieveData("data/GetCommitsNoUser.json")
 		_, _ = fmt.Fprint(w, string(data))
 		return
 	}
