@@ -119,27 +119,39 @@ func (repo *GiteaRepository) GetCommits(_, toSha string) ([]*semrel.RawCommit, e
 		for _, commit := range commits {
 			sha := commit.SHA
 
-			if commit.Author == nil {
-				return nil, fmt.Errorf("gitea: author is not found. Check email [%s] is assigned to user",
-					commit.RepoCommit.Author.Email)
+			// When the commit author/committer email is not registered with a
+			// Gitea user, the API returns null for the author/committer. In that
+			// case the login is left empty and the name and email from the commit
+			// itself are used instead.
+			var authorLogin string
+			authorName := commit.RepoCommit.Author.Name
+			authorEmail := commit.RepoCommit.Author.Email
+			if commit.Author != nil {
+				authorLogin = commit.Author.UserName
+				authorName = commit.Author.FullName
+				authorEmail = commit.Author.Email
 			}
 
-			if commit.Committer == nil {
-				return nil, fmt.Errorf("gitea: committer is not found. Check email [%s] is assigned to user",
-					commit.RepoCommit.Committer.Email)
+			var committerLogin string
+			committerName := commit.RepoCommit.Committer.Name
+			committerEmail := commit.RepoCommit.Committer.Email
+			if commit.Committer != nil {
+				committerLogin = commit.Committer.UserName
+				committerName = commit.Committer.FullName
+				committerEmail = commit.Committer.Email
 			}
 
 			allCommits = append(allCommits, &semrel.RawCommit{
 				SHA:        sha,
 				RawMessage: commit.RepoCommit.Message,
 				Annotations: map[string]string{
-					"author_login":    commit.Author.UserName,
-					"author_name":     commit.Author.FullName,
-					"author_email":    commit.Author.Email,
+					"author_login":    authorLogin,
+					"author_name":     authorName,
+					"author_email":    authorEmail,
 					"author_date":     commit.RepoCommit.Author.Date,
-					"committer_login": commit.Committer.UserName,
-					"committer_name":  commit.Committer.FullName,
-					"committer_email": commit.Committer.Email,
+					"committer_login": committerLogin,
+					"committer_name":  committerName,
+					"committer_email": committerEmail,
 					"committer_date":  commit.RepoCommit.Committer.Date,
 				},
 			})

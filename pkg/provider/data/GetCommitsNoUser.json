@@ -1,0 +1,120 @@
+[
+  {
+    "url": "https://example.com/api/v1/repos/alice/example-repo/git/commits/1111111111111111111111111111111111111111",
+    "sha": "1111111111111111111111111111111111111111",
+    "created": "2026-08-20T06:12:44Z",
+    "html_url": "https://example.com/alice/example-repo/commit/1111111111111111111111111111111111111111",
+    "commit": {
+      "url": "https://example.com/api/v1/repos/alice/example-repo/git/commits/1111111111111111111111111111111111111111",
+      "author": {
+        "name": "Alice",
+        "email": "alice@example.com",
+        "date": "2026-08-20T06:12:44Z"
+      },
+      "committer": {
+        "name": "Alice",
+        "email": "alice@example.com",
+        "date": "2026-08-20T06:12:44Z"
+      },
+      "message": "Merge pull request 'fix(deps): update example to v1.31.3' (#2) from renovate/example-1.x into master\n",
+      "tree": {
+        "url": "https://example.com/api/v1/repos/alice/example-repo/git/trees/1111111111111111111111111111111111111111",
+        "sha": "1111111111111111111111111111111111111111",
+        "created": "2026-08-20T06:12:44Z"
+      },
+      "verification": {
+        "verified": false,
+        "reason": "gpg.error.not_signed_commit",
+        "signature": "",
+        "signer": null,
+        "payload": ""
+      }
+    },
+    "author": {
+      "id": 1,
+      "login": "alice",
+      "full_name": "Alice",
+      "email": "alice@example.com",
+      "avatar_url": "https://example.com/avatar/alice",
+      "html_url": "https://example.com/alice",
+      "username": "alice"
+    },
+    "committer": {
+      "id": 1,
+      "login": "alice",
+      "full_name": "Alice",
+      "email": "alice@example.com",
+      "avatar_url": "https://example.com/avatar/alice",
+      "html_url": "https://example.com/alice",
+      "username": "alice"
+    },
+    "parents": [
+      {
+        "url": "https://example.com/api/v1/repos/alice/example-repo/git/commits/1111111111111111111111111111111111111111",
+        "sha": "1111111111111111111111111111111111111111",
+        "created": "0001-01-01T00:00:00Z"
+      }
+    ],
+    "files": [],
+    "stats": {
+      "total": 0,
+      "additions": 0,
+      "deletions": 0
+    }
+  },
+  {
+    "url": "https://example.com/api/v1/repos/alice/example-repo/git/commits/2222222222222222222222222222222222222222",
+    "sha": "2222222222222222222222222222222222222222",
+    "created": "2026-04-21T22:57:30+02:00",
+    "html_url": "https://example.com/alice/example-repo/commit/2222222222222222222222222222222222222222",
+    "commit": {
+      "url": "https://example.com/api/v1/repos/alice/example-repo/git/commits/2222222222222222222222222222222222222222",
+      "author": {
+        "name": "Unknown Author",
+        "email": "unknown@example.com",
+        "date": "2026-04-21T16:00:11-04:00"
+      },
+      "committer": {
+        "name": "Bob",
+        "email": "bob@example.com",
+        "date": "2026-04-21T22:57:30+02:00"
+      },
+      "message": "fix: use example command\n",
+      "tree": {
+        "url": "https://example.com/api/v1/repos/alice/example-repo/git/trees/2222222222222222222222222222222222222222",
+        "sha": "2222222222222222222222222222222222222222",
+        "created": "2026-04-21T22:57:30+02:00"
+      },
+      "verification": {
+        "verified": false,
+        "reason": "gpg.error.not_signed_commit",
+        "signature": "",
+        "signer": null,
+        "payload": ""
+      }
+    },
+    "author": null,
+    "committer": {
+      "id": 2,
+      "login": "bob",
+      "full_name": "Bob",
+      "email": "bob@example.com",
+      "avatar_url": "https://example.com/avatar/bob",
+      "html_url": "https://example.com/bob",
+      "username": "bob"
+    },
+    "parents": [
+      {
+        "url": "https://example.com/api/v1/repos/alice/example-repo/git/commits/2222222222222222222222222222222222222222",
+        "sha": "2222222222222222222222222222222222222222",
+        "created": "0001-01-01T00:00:00Z"
+      }
+    ],
+    "files": [],
+    "stats": {
+      "total": 6,
+      "additions": 3,
+      "deletions": 3
+    }
+  }
+]
