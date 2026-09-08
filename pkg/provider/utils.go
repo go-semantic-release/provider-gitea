@@ -25,15 +25,15 @@ func createGiteaCommit(sha, message, date string) *gitea.Commit {
 			URL: "",
 			Author: &gitea.CommitUser{
 				Identity: gitea.Identity{
-					Name:  "A User",
-					Email: "owner@noreply.1.1.1.1",
+					Name:  testUserName,
+					Email: testUserEmail,
 				},
 				Date: date,
 			},
 			Committer: &gitea.CommitUser{
 				Identity: gitea.Identity{
-					Name:  "A User",
-					Email: "owner@noreply.1.1.1.1",
+					Name:  testUserName,
+					Email: testUserEmail,
 				},
 				Date: date,
 			},
@@ -53,14 +53,14 @@ func createGiteaCommit(sha, message, date string) *gitea.Commit {
 		Author: &gitea.User{
 			ID:       0,
 			UserName: "owner",
-			FullName: "A User",
-			Email:    "owner@noreply.1.1.1.1",
+			FullName: testUserName,
+			Email:    testUserEmail,
 		},
 		Committer: &gitea.User{
 			ID:       0,
 			UserName: "owner",
-			FullName: "A User",
-			Email:    "owner@noreply.1.1.1.1",
+			FullName: testUserName,
+			Email:    testUserEmail,
 		},
 		Parents: nil,
 		Files:   nil,
@@ -94,9 +94,9 @@ func createTestGiteaRepo(t *testing.T) *GiteaRepository {
 	repo := &GiteaRepository{}
 
 	err := repo.Init(map[string]string{
-		"gitea_host": server.URL,
-		"slug":       fmt.Sprintf("%s/%s", giteaUser, giteaRepo),
-		"token":      "token",
+		optKeyHost:  server.URL,
+		optKeySlug:  fmt.Sprintf("%s/%s", giteaUser, giteaRepo),
+		optKeyToken: testTokenValue,
 	})
 	assertions.NoError(err)
 	return repo

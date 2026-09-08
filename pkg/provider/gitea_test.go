@@ -24,9 +24,9 @@ func TestNewGiteaRepository(t *testing.T) {
 	repo = &GiteaRepository{}
 
 	err = repo.Init(map[string]string{
-		"gitea_host": server.URL,
-		"slug":       fmt.Sprintf("%s/%s", giteaUser, giteaRepo),
-		"token":      "token",
+		optKeyHost:  server.URL,
+		optKeySlug:  fmt.Sprintf("%s/%s", giteaUser, giteaRepo),
+		optKeyToken: testTokenValue,
 	})
 	assertions.NoError(err)
 }
@@ -87,9 +87,9 @@ func TestGiteaGetCommitsUnknownUser(t *testing.T) {
 	repo := &GiteaRepository{}
 
 	err := repo.Init(map[string]string{
-		"gitea_host": server.URL,
-		"slug":       fmt.Sprintf("%s/%s", giteaUser, giteaRepoNoUser),
-		"token":      "token",
+		optKeyHost:  server.URL,
+		optKeySlug:  fmt.Sprintf("%s/%s", giteaUser, giteaRepoNoUser),
+		optKeyToken: testTokenValue,
 	})
 	assertions.NoError(err)
 
@@ -185,7 +185,7 @@ func TestGiteaCreateRelease(t *testing.T) {
 	repo := createTestGiteaRepo(t)
 
 	err := repo.CreateRelease(&provider.CreateReleaseConfig{
-		NewVersion: "5.0.0",
+		NewVersion: testVersion,
 		Prerelease: false,
 		Branch:     "",
 		SHA:        testSHA,
@@ -201,16 +201,16 @@ func TestGiteaCreateReleaseStripPrefix(t *testing.T) {
 	repo := &GiteaRepository{}
 
 	err := repo.Init(map[string]string{
-		"gitea_host":         server.URL,
-		"slug":               fmt.Sprintf("%s/%s", giteaUser, giteaRepo),
-		"token":              "token",
+		optKeyHost:           server.URL,
+		optKeySlug:           fmt.Sprintf("%s/%s", giteaUser, giteaRepo),
+		optKeyToken:          testTokenValue,
 		"strip_v_tag_prefix": "true",
 	})
 
 	assertions.NoError(err)
 
 	err = repo.CreateRelease(&provider.CreateReleaseConfig{
-		NewVersion: "5.0.0",
+		NewVersion: testVersion,
 		Prerelease: false,
 		Branch:     "",
 		SHA:        testSHA,
@@ -226,9 +226,9 @@ func TestGiteaInvalidTag(t *testing.T) {
 	repo := &GiteaRepository{}
 
 	err := repo.Init(map[string]string{
-		"gitea_host": server.URL,
-		"slug":       fmt.Sprintf("%s/%s", giteaUser, giteaRepo),
-		"token":      "token",
+		optKeyHost:  server.URL,
+		optKeySlug:  fmt.Sprintf("%s/%s", giteaUser, giteaRepo),
+		optKeyToken: testTokenValue,
 	})
 
 	assertions.NoError(err)
@@ -280,8 +280,8 @@ func TestGiteaEnvironmentVars(t *testing.T) {
 
 			repo := &GiteaRepository{}
 			err := repo.Init(map[string]string{
-				"gitea_host": server.URL,
-				"token":      "token",
+				optKeyHost:  server.URL,
+				optKeyToken: testTokenValue,
 			})
 
 			require.NoError(t, err)
@@ -298,7 +298,7 @@ func TestGiteaTokenNotSet(t *testing.T) {
 
 	repo := &GiteaRepository{}
 	err := repo.Init(map[string]string{
-		"gitea_host": server.URL,
+		optKeyHost: server.URL,
 	})
 
 	assertions.Errorf(err, "gitea token missing")
@@ -312,10 +312,10 @@ func TestGiteaNonBooleanStripPrefix(t *testing.T) {
 
 	repo := &GiteaRepository{}
 	err := repo.Init(map[string]string{
-		"gitea_host":         server.URL,
-		"slug":               fmt.Sprintf("%s/%s", giteaUser, giteaRepo),
+		optKeyHost:           server.URL,
+		optKeySlug:           fmt.Sprintf("%s/%s", giteaUser, giteaRepo),
 		"strip_v_tag_prefix": "something",
-		"token":              "token",
+		optKeyToken:          testTokenValue,
 	})
 
 	assertions.Errorf(err, "failed to set property strip_v_tag_prefix: strconv.ParseBool: parsing \"something\": invalid syntax")

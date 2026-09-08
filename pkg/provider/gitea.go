@@ -16,6 +16,13 @@ import (
 
 var PVERSION = "dev"
 
+// Provider option keys accepted by Init.
+const (
+	optKeyHost  = "gitea_host"
+	optKeySlug  = "slug"
+	optKeyToken = "token"
+)
+
 type GiteaRepository struct {
 	client          *gitea.Client
 	repo            string
@@ -26,7 +33,7 @@ type GiteaRepository struct {
 
 // gocyclo:ignore
 func (repo *GiteaRepository) Init(config map[string]string) error {
-	giteaHost := config["gitea_host"]
+	giteaHost := config[optKeyHost]
 	if giteaHost == "" {
 		giteaHost = os.Getenv("GITEA_HOST")
 	}
@@ -36,7 +43,7 @@ func (repo *GiteaRepository) Init(config map[string]string) error {
 	}
 
 	repo.baseURL = giteaHost
-	slug := config["slug"]
+	slug := config[optKeySlug]
 
 	if slug == "" {
 		slug = os.Getenv("GITHUB_REPOSITORY")
@@ -50,7 +57,7 @@ func (repo *GiteaRepository) Init(config map[string]string) error {
 		slug = os.Getenv("CI_REPO_NAME")
 	}
 
-	token := config["token"]
+	token := config[optKeyToken]
 	if token == "" {
 		token = os.Getenv("GITEA_TOKEN")
 	}
