@@ -14,7 +14,9 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: '1.26'
-      - uses: golangci/golangci-lint-action@v6.5.2
+      - uses: golangci/golangci-lint-action@v8
+        with:
+          version: v2.12.2
   test:
     runs-on: ubuntu-latest
     steps:
@@ -50,7 +52,9 @@ jobs:
           minColorRange: 50
           maxColorRange: 90
           valColorRange: ${{ env.COVERAGE }}
-        if: github.event_name != 'pull_request'
+        # Badge hosting is best-effort external infra; never fail CI on it.
+        if: github.ref == 'refs/heads/main'
+        continue-on-error: true
   build:
     runs-on: ${{ matrix.os }}
     needs:
