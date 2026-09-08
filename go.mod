@@ -1,4 +1,4 @@
-module github.com/cybercinch/go-semantic-release-provider-gitea
+module github.com/go-semantic-release/provider-gitea
 
 go 1.25.0
 
