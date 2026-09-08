@@ -96,8 +96,9 @@ func TestGiteaGetCommitsUnknownUser(t *testing.T) {
 	commits, err := repo.GetCommits("", "sa213445t6")
 
 	assertions.NoError(err)
-	assertions.Len(commits, 2)
+	assertions.Len(commits, 4)
 
+	// Both author and committer resolve to a Gitea user.
 	k := commits[0]
 	assertions.Equal("1111111111111111111111111111111111111111", k.SHA)
 	assertions.Equal("alice", k.Annotations["author_login"])
@@ -106,6 +107,8 @@ func TestGiteaGetCommitsUnknownUser(t *testing.T) {
 	assertions.Equal("alice", k.Annotations["committer_login"])
 	assertions.Equal("Alice", k.Annotations["committer_name"])
 
+	// Author email is not registered with a Gitea user: fall back to the
+	// identity on the commit and leave the login empty.
 	u := commits[1]
 	assertions.Equal("2222222222222222222222222222222222222222", u.SHA)
 	assertions.Equal("fix: use example command\n", u.RawMessage)
@@ -117,6 +120,29 @@ func TestGiteaGetCommitsUnknownUser(t *testing.T) {
 	assertions.Equal("Bob", u.Annotations["committer_name"])
 	assertions.Equal("bob@example.com", u.Annotations["committer_email"])
 	assertions.Equal("2026-04-21T22:57:30+02:00", u.Annotations["committer_date"])
+
+	// Committer email is not registered with a Gitea user.
+	c := commits[2]
+	assertions.Equal("3333333333333333333333333333333333333333", c.SHA)
+	assertions.Equal("carol", c.Annotations["author_login"])
+	assertions.Equal("Carol", c.Annotations["author_name"])
+	assertions.Equal("", c.Annotations["committer_login"])
+	assertions.Equal("Unregistered Committer", c.Annotations["committer_name"])
+	assertions.Equal("unregistered@example.com", c.Annotations["committer_email"])
+	assertions.Equal("2026-05-02T09:31:00Z", c.Annotations["committer_date"])
+
+	// Neither author nor committer resolves to a Gitea user.
+	n := commits[3]
+	assertions.Equal("4444444444444444444444444444444444444444", n.SHA)
+	assertions.Equal("feat: add offline mode\n", n.RawMessage)
+	assertions.Equal("", n.Annotations["author_login"])
+	assertions.Equal("Eve Nobody", n.Annotations["author_name"])
+	assertions.Equal("eve@nobody.example", n.Annotations["author_email"])
+	assertions.Equal("2026-06-11T14:00:00Z", n.Annotations["author_date"])
+	assertions.Equal("", n.Annotations["committer_login"])
+	assertions.Equal("Frank Nobody", n.Annotations["committer_name"])
+	assertions.Equal("frank@nobody.example", n.Annotations["committer_email"])
+	assertions.Equal("2026-06-11T14:05:00Z", n.Annotations["committer_date"])
 }
 
 func TestGiteaGetReleases(t *testing.T) {
