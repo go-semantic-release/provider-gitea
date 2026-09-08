@@ -119,27 +119,8 @@ func (repo *GiteaRepository) GetCommits(_, toSha string) ([]*semrel.RawCommit, e
 		for _, commit := range commits {
 			sha := commit.SHA
 
-			// When the commit author/committer email is not registered with a
-			// Gitea user, the API returns null for the author/committer. In that
-			// case the login is left empty and the name and email from the commit
-			// itself are used instead.
-			var authorLogin string
-			authorName := commit.RepoCommit.Author.Name
-			authorEmail := commit.RepoCommit.Author.Email
-			if commit.Author != nil {
-				authorLogin = commit.Author.UserName
-				authorName = commit.Author.FullName
-				authorEmail = commit.Author.Email
-			}
-
-			var committerLogin string
-			committerName := commit.RepoCommit.Committer.Name
-			committerEmail := commit.RepoCommit.Committer.Email
-			if commit.Committer != nil {
-				committerLogin = commit.Committer.UserName
-				committerName = commit.Committer.FullName
-				committerEmail = commit.Committer.Email
-			}
+			authorLogin, authorName, authorEmail, authorDate := resolveIdentity(commit.Author, commit.RepoCommit.Author)
+			committerLogin, committerName, committerEmail, committerDate := resolveIdentity(commit.Committer, commit.RepoCommit.Committer)
 
 			allCommits = append(allCommits, &semrel.RawCommit{
 				SHA:        sha,
@@ -148,11 +129,11 @@ func (repo *GiteaRepository) GetCommits(_, toSha string) ([]*semrel.RawCommit, e
 					"author_login":    authorLogin,
 					"author_name":     authorName,
 					"author_email":    authorEmail,
-					"author_date":     commit.RepoCommit.Author.Date,
+					"author_date":     authorDate,
 					"committer_login": committerLogin,
 					"committer_name":  committerName,
 					"committer_email": committerEmail,
-					"committer_date":  commit.RepoCommit.Committer.Date,
+					"committer_date":  committerDate,
 				},
 			})
 		}
@@ -162,6 +143,22 @@ func (repo *GiteaRepository) GetCommits(_, toSha string) ([]*semrel.RawCommit, e
 		opts.Page = resp.NextPage
 	}
 	return allCommits, nil
+}
+
+// resolveIdentity determines the login, name, email and date for a commit
+// author or committer. It prefers the Gitea user resolved from the commit
+// email; when that email is not associated with any Gitea account the API
+// returns a nil user, so the identity recorded on the commit itself is used
+// and the login is left empty. The date always comes from the commit
+// signature, which the Gitea user record does not carry.
+func resolveIdentity(user *gitea.User, sig *gitea.CommitUser) (login, name, email, date string) {
+	if sig != nil {
+		name, email, date = sig.Name, sig.Email, sig.Date
+	}
+	if user != nil {
+		login, name, email = user.UserName, user.FullName, user.Email
+	}
+	return login, name, email, date
 }
 
 //gocyclo:ignore
