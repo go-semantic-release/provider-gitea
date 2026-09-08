@@ -10,9 +10,17 @@ import (
 	"code.gitea.io/sdk/gitea"
 )
 
+// Shared test data reused across the provider test suite.
+const (
+	testTokenValue = "token"
+	testVersion    = "5.0.0"
+	testUserName   = "A User"
+	testUserEmail  = "owner@noreply.1.1.1.1"
+)
+
 var validTags = map[string]bool{
-	"v5.0.0": true,
-	"5.0.0":  true,
+	"v5.0.0":    true,
+	testVersion: true,
 }
 
 var (
