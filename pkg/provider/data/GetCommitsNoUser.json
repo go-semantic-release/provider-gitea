@@ -116,5 +116,107 @@
       "additions": 3,
       "deletions": 3
     }
+  },
+  {
+    "url": "https://example.com/api/v1/repos/alice/example-repo/git/commits/3333333333333333333333333333333333333333",
+    "sha": "3333333333333333333333333333333333333333",
+    "created": "2026-05-02T09:30:00Z",
+    "html_url": "https://example.com/alice/example-repo/commit/3333333333333333333333333333333333333333",
+    "commit": {
+      "url": "https://example.com/api/v1/repos/alice/example-repo/git/commits/3333333333333333333333333333333333333333",
+      "author": {
+        "name": "Carol",
+        "email": "carol@example.com",
+        "date": "2026-05-02T09:30:00Z"
+      },
+      "committer": {
+        "name": "Unregistered Committer",
+        "email": "unregistered@example.com",
+        "date": "2026-05-02T09:31:00Z"
+      },
+      "message": "chore: tidy imports\n",
+      "tree": {
+        "url": "https://example.com/api/v1/repos/alice/example-repo/git/trees/3333333333333333333333333333333333333333",
+        "sha": "3333333333333333333333333333333333333333",
+        "created": "2026-05-02T09:30:00Z"
+      },
+      "verification": {
+        "verified": false,
+        "reason": "gpg.error.not_signed_commit",
+        "signature": "",
+        "signer": null,
+        "payload": ""
+      }
+    },
+    "author": {
+      "id": 3,
+      "login": "carol",
+      "full_name": "Carol",
+      "email": "carol@example.com",
+      "avatar_url": "https://example.com/avatar/carol",
+      "html_url": "https://example.com/carol",
+      "username": "carol"
+    },
+    "committer": null,
+    "parents": [
+      {
+        "url": "https://example.com/api/v1/repos/alice/example-repo/git/commits/3333333333333333333333333333333333333333",
+        "sha": "3333333333333333333333333333333333333333",
+        "created": "0001-01-01T00:00:00Z"
+      }
+    ],
+    "files": [],
+    "stats": {
+      "total": 2,
+      "additions": 1,
+      "deletions": 1
+    }
+  },
+  {
+    "url": "https://example.com/api/v1/repos/alice/example-repo/git/commits/4444444444444444444444444444444444444444",
+    "sha": "4444444444444444444444444444444444444444",
+    "created": "2026-06-11T14:05:00Z",
+    "html_url": "https://example.com/alice/example-repo/commit/4444444444444444444444444444444444444444",
+    "commit": {
+      "url": "https://example.com/api/v1/repos/alice/example-repo/git/commits/4444444444444444444444444444444444444444",
+      "author": {
+        "name": "Eve Nobody",
+        "email": "eve@nobody.example",
+        "date": "2026-06-11T14:00:00Z"
+      },
+      "committer": {
+        "name": "Frank Nobody",
+        "email": "frank@nobody.example",
+        "date": "2026-06-11T14:05:00Z"
+      },
+      "message": "feat: add offline mode\n",
+      "tree": {
+        "url": "https://example.com/api/v1/repos/alice/example-repo/git/trees/4444444444444444444444444444444444444444",
+        "sha": "4444444444444444444444444444444444444444",
+        "created": "2026-06-11T14:05:00Z"
+      },
+      "verification": {
+        "verified": false,
+        "reason": "gpg.error.not_signed_commit",
+        "signature": "",
+        "signer": null,
+        "payload": ""
+      }
+    },
+    "author": null,
+    "committer": null,
+    "parents": [
+      {
+        "url": "https://example.com/api/v1/repos/alice/example-repo/git/commits/4444444444444444444444444444444444444444",
+        "sha": "4444444444444444444444444444444444444444",
+        "created": "0001-01-01T00:00:00Z"
+      }
+    ],
+    "files": [],
+    "stats": {
+      "total": 4,
+      "additions": 4,
+      "deletions": 0
+    }
   }
 ]
